@@ -1,21 +1,17 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100 vh; /* Высота страницы = 100% высоты экрана */
-    margin: 0; /* Убираем стандартные отступы браузера */
+    min-height: 100vh; /* Убрали пробел */
+    margin: 0;
 }
 
-/* Твой класс */
 .calc_ultra {
-    margin-top: auto; /* ВОЛШЕБСТВО: это свойство прижимает блок к низу */
-    background: rgb (0, 140, 255);
-    
-    /* Добавим красоты, чтобы текст не прилипал к краям */
-    padding: 20 px; 
-    text-align: center; 
+    margin-top: auto;
+    background: rgb(0, 140, 255); /* Убрали пробел */
+    padding: 20px; /* Убрали пробел */
+    text-align: center;
 }
-
 
 .versions {
-     margin-left: 40 px;
+     margin-left: 40px; /* Убрали пробел */
 }
