@@ -10,22 +10,19 @@ body {
     font-family: 'Rajdhani', sans-serif;
     background-color: #030305;
     color: #e2e8f0;
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* На телефонах возвращаем обычный курсор */
+/* На телефонах обычный курсор */
 @media (pointer: coarse) {
     body { cursor: auto; }
     .cursor-dot, .cursor-outline { display: none; }
 }
 
-/* Прячем курсор только на ПК */
+/* На ПК прячем курсор */
 @media (pointer: fine) {
-    body { cursor: none; }
-    a, button, .card { cursor: none; }
+    body, a, button, .card { cursor: none; }
 }
 
 /* --- СКАНЛАЙНЫ --- */
@@ -40,16 +37,39 @@ body::after {
     pointer-events: none;
 }
 
+/* --- КУРСОР --- */
+.cursor-dot {
+    width: 6px; height: 6px; background-color: #fff;
+    border-radius: 50%; position: fixed; top: 0; left: 0;
+    transform: translate(-50%, -50%); pointer-events: none; z-index: 10000;
+    box-shadow: 0 0 10px #fff, 0 0 20px #00f3ff;
+}
+.cursor-outline {
+    width: 40px; height: 40px; border: 2px solid #00f3ff;
+    border-radius: 50%; position: fixed; top: 0; left: 0;
+    transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+body.cursor-hover .cursor-outline {
+    width: 70px; height: 70px; background-color: rgba(0, 243, 255, 0.1);
+    border-color: #ff00ff; box-shadow: 0 0 20px #ff00ff;
+}
+
+/* --- ФОН --- */
+#space-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; background: radial-gradient(circle at center, #111 0%, #000 100%);
+}
+
 /* --- ШАПКА --- */
 .site-header {
-    position: fixed; /* Фиксируем шапку */
+    position: fixed;
     top: 20px;
     left: 0;
     width: 100%;
     z-index: 100;
     display: flex;
     justify-content: center;
-    padding: 0 15px;
 }
 
 .site-header nav {
@@ -59,7 +79,6 @@ body::after {
     border-radius: 50px;
     display: flex;
     gap: 30px;
-    position: relative;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
@@ -77,38 +96,43 @@ body::after {
 
 .site-header a:hover, .site-header a.active {
     color: #00f3ff;
-    text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+    text-shadow: 0 0 10px #00f3ff;
 }
 
-/* --- КОНТЕЙНЕР (Центрируем всё на главной) --- */
+/* --- КОНТЕЙНЕР --- */
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 100px 20px 40px; /* Отступ сверху под шапку */
+    padding: 100px 20px 40px;
     width: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Центрируем по вертикали */
     position: relative;
     z-index: 10;
 }
 
-/* Специально для главной страницы: убираем скролл */
-body.main-page {
+/* Главная страница - центрируем всё по экрану */
+.main-page {
+    display: flex;
+    align-items: center; /* Центр по вертикали */
+    justify-content: center; /* Центр по горизонтали */
     height: 100vh;
-    overflow: hidden; 
+}
+
+.main-page .container {
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* --- ЗАГОЛОВКИ --- */
 h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem); /* Автоматический размер шрифта */
+    font-size: clamp(2rem, 5vw, 3.5rem);
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 10px;
     line-height: 1.2;
-    text-align: center;
 }
 
 h2 {
@@ -117,58 +141,12 @@ h2 {
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
     margin-bottom: 30px;
     font-weight: 400;
-    text-align: center;
 }
 
-/* --- ГЛИТЧ + ПЕЧАТНАЯ МАШИНКА --- */
+/* --- ПЕЧАТНАЯ МАШИНКА --- */
 #typing-text {
     color: #00f3ff;
     text-shadow: 0 0 20px #00f3ff;
-}
-
-.glitch-active {
-    position: relative;
-    display: inline-block;
-}
-
-.glitch-active::before, .glitch-active::after {
-    content: attr(data-text); /* Берем текст из атрибута data-text */
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #030305;
-    overflow: hidden;
-    opacity: 0.8;
-}
-
-.glitch-active::before {
-    left: 3px;
-    text-shadow: -2px 0 #ff00ff;
-    animation: glitch-anim 2s infinite linear alternate-reverse;
-}
-
-.glitch-active::after {
-    left: -3px;
-    text-shadow: 2px 0 #00f3ff;
-    animation: glitch-anim2 2.5s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim {
-    0% { clip-path: inset(20% 0 80% 0); }
-    20% { clip-path: inset(60% 0 10% 0); }
-    40% { clip-path: inset(40% 0 50% 0); }
-    60% { clip-path: inset(80% 0 5% 0); }
-    80% { clip-path: inset(10% 0 70% 0); }
-    100% { clip-path: inset(30% 0 50% 0); }
-}
-
-@keyframes glitch-anim2 {
-    0% { clip-path: inset(10% 0 60% 0); }
-    20% { clip-path: inset(30% 0 20% 0); }
-    40% { clip-path: inset(70% 0 10% 0); }
-    60% { clip-path: inset(20% 0 50% 0); }
-    80% { clip-path: inset(50% 0 30% 0); }
-    100% { clip-path: inset(5% 0 80% 0); }
 }
 
 /* --- КНОПКИ --- */
@@ -184,23 +162,16 @@ h2 {
     text-transform: uppercase;
     letter-spacing: 2px;
     border: 1px solid #00f3ff;
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 10px rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
     transition: all 0.3s ease;
-    text-align: center;
 }
-
-.btn:hover {
-    background: #00f3ff;
-    color: #000;
-    box-shadow: 0 0 30px #00f3ff;
-}
-
+.btn:hover { background: #00f3ff; color: #000; box-shadow: 0 0 30px #00f3ff; }
 .btn-pink { color: #ff00ff; border-color: #ff00ff; background: rgba(255, 0, 255, 0.1); }
 .btn-pink:hover { background: #ff00ff; box-shadow: 0 0 30px #ff00ff; }
 
 /* --- 3D ГОЛОГРАММА --- */
 .hero-3d-container {
-    height: 180px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -208,21 +179,13 @@ h2 {
 }
 
 .hologram-ring {
-    width: 120px; height: 120px;
+    width: 100px; height: 100px;
     border-radius: 50%;
     border: 3px solid transparent;
     border-top-color: #00f3ff;
     border-bottom-color: #ff00ff;
     box-shadow: 0 0 25px rgba(0, 243, 255, 0.4), inset 0 0 25px rgba(255, 0, 255, 0.4);
     animation: spinRing 4s linear infinite;
-    position: relative;
-}
-
-.hologram-ring::before {
-    content: ''; position: absolute;
-    top: -15px; left: -15px; right: -15px; bottom: -15px;
-    border-radius: 50%; border: 2px solid transparent; border-left-color: #00f3ff;
-    animation: spinRing 6s linear infinite reverse;
 }
 
 @keyframes spinRing {
@@ -230,7 +193,7 @@ h2 {
     100% { transform: rotateX(360deg) rotateY(180deg) rotateZ(360deg); }
 }
 
-/* --- БЛОК НОВОСТЕЙ НА ГЛАВНОЙ --- */
+/* --- НОВОСТИ (Мини) --- */
 .news-mini {
     margin-top: 30px;
     background: rgba(20, 20, 30, 0.5);
@@ -239,45 +202,33 @@ h2 {
     border-radius: 0 10px 10px 0;
     text-align: left;
     max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
 }
 .news-mini p { font-size: 0.95rem; margin-bottom: 5px; color: #cbd5e1; }
 .news-mini strong { color: #ff00ff; }
 
-/* --- СЕТКА ПРОЕКТОВ И КАРТОЧКИ --- */
+/* --- КАРТОЧКИ (Для страницы проектов) --- */
 .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
     margin-top: 30px;
-    perspective: 1000px;
 }
 
 .card {
     background: rgba(15, 15, 25, 0.7);
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     padding: 25px;
-    transition: transform 0.1s ease, box-shadow 0.3s, border-color 0.3s;
+    transition: transform 0.1s ease, border-color 0.3s;
     display: flex; flex-direction: column; position: relative;
-    transform-style: preserve-3d;
 }
+.card:hover { border-color: #ff00ff; box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2); }
+.card h3 { font-size: 1.6rem; color: #fff; margin-bottom: 10px; }
+.card p { color: #94a3b8; margin-bottom: 20px; flex-grow: 1; font-size: 1rem; }
 
-.card:hover {
-    border-color: #ff00ff;
-    box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2);
-}
-
-.card h3 { font-size: 1.6rem; color: #fff; margin-bottom: 10px; transform: translateZ(30px); }
-.card p { color: #94a3b8; margin-bottom: 20px; flex-grow: 1; font-size: 1rem; transform: translateZ(20px); }
-.card .btn { transform: translateZ(40px); align-self: flex-start; }
-
-/* --- ОСТАЛЬНЫЕ БЛОКИ --- */
+/* --- БЛОКИ ИНФОРМАЦИИ --- */
 .changelog {
-    background: linear-gradient(135deg, rgba(0, 243, 255, 0.05), rgba(255, 0, 255, 0.05));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 243, 255, 0.05);
     border-left: 4px solid #00f3ff;
     padding: 25px; margin-top: 30px; border-radius: 0 12px 12px 0;
 }
@@ -287,36 +238,27 @@ h2 {
 
 .warning-box {
     margin-top: 30px; background: rgba(255, 170, 0, 0.05);
-    border: 1px solid rgba(255, 170, 0, 0.3); border-left: 4px solid #ffaa00;
-    padding: 20px; border-radius: 5px; color: #ffcc00;
+    border-left: 4px solid #ffaa00;
+    padding: 20px; border-radius: 0 5px 5px 0; color: #ffcc00;
 }
 
-/* --- АНИМАЦИЯ ПОЯВЛЕНИЯ --- */
-.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
-.reveal.active { opacity: 1; transform: translateY(0); }
-
 /* =========================================
-   МОБИЛЬНАЯ ВЕРСИЯ (АДАПТИВ)
+   МОБИЛЬНАЯ ВЕРСИЯ
    ========================================= */
 @media (max-width: 768px) {
-    body.main-page { height: auto; overflow-y: auto; } /* Разрешаем скролл на телефоне, если не влезет */
-    
-    .container { padding: 90px 15px 30px; justify-content: flex-start; }
+    .main-page { height: auto; min-height: 100vh; } /* Разрешаем скролл на мобилке */
+    .container { padding: 100px 15px 30px; }
     
     .site-header { top: 10px; }
     .site-header nav { gap: 15px; padding: 10px 20px; }
-    .site-header a { font-size: 14px; letter-spacing: 1px; }
+    .site-header a { font-size: 14px; }
 
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1rem; margin-bottom: 20px; }
+    .hero-3d-container { height: 100px; }
+    .hologram-ring { width: 70px; height: 70px; }
 
-    .hero-3d-container { height: 120px; margin-bottom: 10px; }
-    .hologram-ring { width: 80px; height: 80px; }
-
-    .project-grid { grid-template-columns: 1fr; } /* Карточки в один столбец */
-    
+    .project-grid { grid-template-columns: 1fr; }
     .btn { width: 100%; padding: 15px; font-size: 15px; }
-    
+}
     .news-mini { padding: 10px 15px; }
     .news-mini p { font-size: 0.85rem; }
 }
