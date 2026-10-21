@@ -4,40 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проекты - Ultra Cosmic</title>
-    <link rel="stylesheet" href="style.css"> <!-- Подключили стили -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="space-bg"></canvas>
 
     <header class="site-header">
         <nav>
             <a href="index.html">Главная</a>
             <a href="projects.html" class="active">Проекты</a>
-            <a href="#">Новости</a>
         </nav>
     </header>
 
     <main class="container">
-        <h1>Мои проекты</h1>
-        <p style="color: #94a3b8; margin-bottom: 20px;">Здесь все мои проекты, в каждом из них отдельная история!</p>
+        <h1>Мои <span class="neon-title">Проекты</span></h1>
+        <p style="color: #94a3b8; margin-bottom: 20px; font-size: 1.2rem;">Здесь все мои проекты, в каждом из них отдельная история!</p>
         
         <div class="project-grid">
             
-            <!-- КАРТОЧКА ПРОЕКТА -->
             <div class="card">
                 <h3>Calc_ultra</h3>
                 <p>Терминальный калькулятор. Начинается всё с малого, но дальше больше!</p>
-                <a href="Calc_ultra.html" class="btn btn-outline">Перейти к проекту</a>
+                <a href="Calc_ultra.html" class="btn btn-pink">Перейти к проекту</a>
             </div>
 
-            <!-- Сюда потом сможешь добавить другие карточки -->
             <div class="card" style="opacity: 0.5;">
                 <h3>Скоро...</h3>
-                <p>Следующий проект находится в разработке.</p>
-                <button class="btn btn-outline" disabled>В разработке</button>
+                <p>Следующий проект находится в разработке. Следите за новостями!</p>
+                <button class="btn" disabled style="border-color: #555; color: #555; box-shadow: none;">В разработке</button>
             </div>
 
         </div>
     </main>
 
+    <script src="script.js"></script>
 </body>
 </html>
