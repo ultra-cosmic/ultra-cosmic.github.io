@@ -15,6 +15,35 @@ body {
 .versions {
      margin-left: 280px; /* Убрали пробел */
 }
-.header {
-     margin-left: 280px;
+
+
+
+
+
+/* Стили для всей шапки */
+.site-header {
+    background-color: #222; /* Темный фон шапки */
+    padding: 15px 20px;     /* Отступы внутри шапки */
+    display: flex;          /* Включаем Flexbox */
+    justify-content: center; /* Центрируем ссылки по горизонтали */
+}
+
+/* Стили для блока со ссылками */
+.site-header nav {
+    display: flex;
+    gap: 40px; /* Расстояние между ссылками */
+}
+
+/* Стили для самих ссылок */
+.site-header a {
+    color: white;           /* Белый текст */
+    text-decoration: none;  /* Убираем подчеркивание */
+    font-size: 24px;        /* Размер текста */
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+/* Эффект при наведении мышки */
+.site-header a:hover {
+    color: #00ccff; /* Голубой цвет при наведении */
 }
