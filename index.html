@@ -6,7 +6,7 @@
     <title>Ultra Cosmic - Главная</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="main-page"> <!-- Класс для отключения скролла на ПК -->
     <canvas id="space-bg"></canvas>
 
     <header class="site-header">
@@ -22,17 +22,24 @@
             <div class="hologram-ring"></div>
         </div>
 
-        <h1 class="reveal">Добро пожаловать в <br><span class="glitch" data-text="ULTRA COSMIC">ULTRA COSMIC</span></h1>
-        <h2 class="reveal">Здесь я буду выкладывать свои проекты по версиям. Добро пожаловать в мой цифровой уголок!</h2>
+        <!-- Печатная машинка + Глитч -->
+        <h1 class="reveal">
+            Добро пожаловать в <br>
+            <span class="glitch-active" data-text="ULTRA COSMIC">
+                <span id="typing-text" data-text="ULTRA COSMIC"></span>
+            </span>
+        </h1>
         
-        <div class="reveal">
+        <h2 class="reveal">Здесь я выкладываю свои проекты по версиям. Мой цифровой уголок!</h2>
+        
+        <div class="reveal" style="text-align: center;">
             <a href="projects.html" class="btn">Смотреть все проекты</a>
         </div>
 
-        <div class="news-block reveal">
-            <h3>Последние новости</h3>
-            <p style="margin-bottom: 10px;"><strong>[21.10.2026]</strong> Сайт получил глобальное обновление: добавлены 3D-голограммы, магнитная шапка, сканальные линии и безумные блики на карточках!</p>
-            <p><strong>[20.10.2026]</strong> Вышла первая версия терминального калькулятора Calc Ultra. Подробности в разделе проектов.</p>
+        <!-- Компактные новости, чтобы всё влезло на один экран -->
+        <div class="news-mini reveal">
+            <p><strong>[21.10.2026]</strong> Глобальное обновление: 3D-голограммы, магнитная шапка и неоновый дизайн!</p>
+            <p><strong>[20.10.2026]</strong> Вышла первая версия терминального калькулятора Calc Ultra.</p>
         </div>
     </main>
 
