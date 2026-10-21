@@ -1,20 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calc_ultra</title>
+    <title>Calc Ultra - Проект</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body> <!-- Перенесли header внутрь body -->
-    <header>
-        <center><h1>Calc ultra</h1></center>
+<body>
+
+    <header class="site-header">
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="projects.html" class="active">Проекты</a>
+            <a href="#">Новости</a>
+        </nav>
     </header>
-    
-    <center><h2>Начинается всё с терминального калькулятора, но дальше больше, давайте вместе посмотрим что будет в конце!</h2></center>
-    
-    <h3 class="versions"><a href="calc_ultra-v1.exe">Версия 1</a></h3> <!-- Убрали слэш -->
-    
-    <h4 class="calc_ultra">К сожалению мои программы вызывают вопросы у антивирусов, так как программы терминальные! Но доверять нам или нет это ваше дело, но я обязательно буду рад если вы опробуете мои проекты.</h4> <!-- Исправили </h3> на </h4> -->
+
+    <main class="container">
+        <h1>Calc Ultra</h1>
+        <h2>Начинается всё с терминального калькулятора, но дальше больше, давайте вместе посмотрим что будет в конце!</h2>
+        
+        <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+            <!-- Кнопка скачивания (убрал слэш из пути) -->
+            <a href="calc_ultra-v1.exe" class="btn">Скачать Версию 1 (.exe)</a>
+            
+            <!-- НОВАЯ КНОПКА: Ссылка на отдельную страницу версий -->
+            <a href="version-1.html" class="btn btn-outline">Что нового в Версии 1?</a>
+        </div>
+        
+        <!-- Твой блок с предупреждением, теперь он стилизован через CSS -->
+        <div class="calc_ultra">
+            <strong>Внимание:</strong> К сожалению, мои программы вызывают вопросы у антивирусов, так как программы терминальные! Но доверять им или нет — это ваше дело. Я обязательно буду рад, если вы опробуете мои проекты.
+        </div>
+    </main>
+
 </body>
 </html>
