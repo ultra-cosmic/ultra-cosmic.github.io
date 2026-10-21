@@ -1,12 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
+    <title>Проекты - Ultra Cosmic</title>
+    <link rel="stylesheet" href="style.css"> <!-- Подключили стили -->
 </head>
 <body>
-    <h1>Здесь все мои проекты, в каждом из них отдельная история!</h1>
-    <h3><a href="/Calc_ultra.html">Calc_ultra</a></h3>
+
+    <header class="site-header">
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="projects.html" class="active">Проекты</a>
+            <a href="#">Новости</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Мои проекты</h1>
+        <p style="color: #94a3b8; margin-bottom: 20px;">Здесь все мои проекты, в каждом из них отдельная история!</p>
+        
+        <div class="project-grid">
+            
+            <!-- КАРТОЧКА ПРОЕКТА -->
+            <div class="card">
+                <h3>Calc_ultra</h3>
+                <p>Терминальный калькулятор. Начинается всё с малого, но дальше больше!</p>
+                <a href="Calc_ultra.html" class="btn btn-outline">Перейти к проекту</a>
+            </div>
+
+            <!-- Сюда потом сможешь добавить другие карточки -->
+            <div class="card" style="opacity: 0.5;">
+                <h3>Скоро...</h3>
+                <p>Следующий проект находится в разработке.</p>
+                <button class="btn btn-outline" disabled>В разработке</button>
+            </div>
+
+        </div>
+    </main>
+
 </body>
 </html>
