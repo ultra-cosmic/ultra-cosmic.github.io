@@ -1,46 +1,45 @@
-// Проверяем, мобильное ли это устройство
-const isMobile = window.matchMedia("(pointer: coarse)").matches;
-
-// --- 1. КАСТОМНЫЙ КУРСОР (Только для ПК) ---
-if (!isMobile) {
-    const cursorDot = document.createElement('div');
-    const cursorOutline = document.createElement('div');
-    cursorDot.classList.add('cursor-dot');
-    cursorOutline.classList.add('cursor-outline');
-    document.body.appendChild(cursorDot);
-    document.body.appendChild(cursorOutline);
-
-    window.addEventListener('mousemove', function(e) {
-        cursorDot.style.left = `${e.clientX}px`;
-        cursorDot.style.top = `${e.clientY}px`;
-        cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: "forwards" });
-    });
-
-    const interactables = document.querySelectorAll('a, button, .card');
-    interactables.forEach(el => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-}
-
-// --- 2. МАГНИТНЫЕ ССЫЛКИ В ХЕДЕРЕ ---
-const navLinks = document.querySelectorAll('.site-header a');
-if (!isMobile) {
-    navLinks.forEach(link => {
-        link.addEventListener('mousemove', (e) => {
-            const rect = link.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            link.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-        });
-        link.addEventListener('mouseleave', () => {
-            link.style.transform = `translate(0px, 0px)`;
-        });
-    });
-}
-
-// --- 3. ВОЗВРАЩАЕМ ПЕЧАТНУЮ МАШИНКУ + ГЛИТЧ ---
 document.addEventListener("DOMContentLoaded", function() {
+    
+    // Проверка на мобилку
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+    // --- 1. КУРСОР (Только для ПК) ---
+    if (!isMobile) {
+        const cursorDot = document.createElement('div');
+        const cursorOutline = document.createElement('div');
+        cursorDot.classList.add('cursor-dot');
+        cursorOutline.classList.add('cursor-outline');
+        document.body.appendChild(cursorDot);
+        document.body.appendChild(cursorOutline);
+
+        window.addEventListener('mousemove', function(e) {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: "forwards" });
+        });
+
+        const interactables = document.querySelectorAll('a, button, .card');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+
+        // Магнитные ссылки в хедере
+        const navLinks = document.querySelectorAll('.site-header a');
+        navLinks.forEach(link => {
+            link.addEventListener('mousemove', (e) => {
+                const rect = link.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                link.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = `translate(0px, 0px)`;
+            });
+        });
+    }
+
+    // --- 2. ПЕЧАТНАЯ МАШИНКА ---
     const textElement = document.getElementById("typing-text");
     if (textElement) {
         const text = textElement.getAttribute("data-text");
@@ -51,117 +50,106 @@ document.addEventListener("DOMContentLoaded", function() {
                 textElement.innerHTML += text.charAt(i);
                 i++;
                 setTimeout(typeWriter, 100);
-            } else {
-                // Когда текст напечатался, включаем глитч-эффект
-                textElement.parentElement.classList.add("glitch-active");
             }
         }
         setTimeout(typeWriter, 500);
     }
-});
 
-// --- 4. КОСМИЧЕСКАЯ СЕТЬ (Оптимизировано для телефонов) ---
-const canvas = document.getElementById("space-bg");
-if (canvas) {
-    const ctx = canvas.getContext("2d");
-    let width, height;
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    // --- 3. ФОН (Космическая сеть) ---
+    const canvas = document.getElementById("space-bg");
+    if (canvas) {
+        const ctx = canvas.getContext("2d");
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-    let mouse = { x: null, y: null, radius: 200 };
-    if (!isMobile) {
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-    }
+        let mouse = { x: null, y: null, radius: 150 };
+        if (!isMobile) {
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.x; mouse.y = e.y;
+            });
+        }
 
-    let particles = [];
-    // На телефоне меньше частиц, чтобы не лагало
-    const particleCount = isMobile ? 40 : 100;
-    
-    for (let i = 0; i < particleCount; i++) {
-        particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            radius: Math.random() * 1.5 + 0.5,
-            speedX: (Math.random() - 0.5) * 1,
-            speedY: (Math.random() - 0.5) * 1,
-            color: Math.random() > 0.5 ? "#00f3ff" : "#ff00ff"
-        });
-    }
+        let particles = [];
+        const particleCount = isMobile ? 40 : 100;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 1.5 + 0.5,
+                speedX: (Math.random() - 0.5) * 1,
+                speedY: (Math.random() - 0.5) * 1,
+                color: Math.random() > 0.5 ? "#00f3ff" : "#ff00ff"
+            });
+        }
 
-    function animate() {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, width, height);
-        for (let i = 0; i < particles.length; i++) {
-            let p = particles[i];
-            p.x += p.speedX;
-            p.y += p.speedY;
-            if (p.x < 0 || p.x > width) p.speedX *= -1;
-            if (p.y < 0 || p.y > height) p.speedY *= -1;
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0 || p.x > width) p.speedX *= -1;
+                if (p.y < 0 || p.y > height) p.speedY *= -1;
 
-            if (!isMobile && mouse.x != null) {
-                let dx = mouse.x - p.x;
-                let dy = mouse.y - p.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    p.x -= dx / 15;
-                    p.y -= dy / 15;
+                if (!isMobile && mouse.x != null) {
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        p.x -= dx / 15; p.y -= dy / 15;
+                    }
                 }
-            }
 
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = p.color;
-            ctx.fill();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
 
-            for (let j = i + 1; j < particles.length; j++) {
-                let p2 = particles[j];
-                let dx2 = p.x - p2.x;
-                let dy2 = p.y - p2.y;
-                let dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-                if (dist < 120) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(0, 243, 255, ${1 - dist/120})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx2 = p.x - p2.x;
+                    let dy2 = p.y - p2.y;
+                    let dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${1 - dist/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
                 }
             }
         }
+        animate();
     }
-    animate();
-}
 
-// --- 5. 3D КАРТОЧКИ С БЛИКОМ (Только для ПК) ---
-if (!isMobile) {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-            
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
+    // --- 4. 3D НАКЛОН КАРТОЧЕК (Только ПК) ---
+    if (!isMobile) {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+            });
         });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
-        });
-    });
-}
+    }
+});
