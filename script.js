@@ -1,9 +1,44 @@
 document.addEventListener("DOMContentLoaded", function() {
-    
-    // Проверка на мобилку
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
-    // --- 1. КУРСОР (Только для ПК) ---
+    // --- СИСТЕМА ЭФФЕКТОВ (Minecraft Resource Packs) ---
+    const effectsList = ['poison', 'speed', 'slowness', 'nausea', 'blindness', 'jump', 'levitation', 'night_vision', 'resistance'];
+    let activeEffects = JSON.parse(localStorage.getItem('ultraEffects')) || [];
+
+    function applyEffects() {
+        // Очищаем все классы эффектов
+        effectsList.forEach(eff => document.body.classList.remove(`effect-${eff}`));
+        // Добавляем активные
+        activeEffects.forEach(eff => document.body.classList.add(`effect-${eff}`));
+
+        // Меняем скорость курсора
+        let speed = '300ms';
+        if (activeEffects.includes('speed')) speed = '0ms';
+        if (activeEffects.includes('slowness')) speed = '2000ms';
+        document.documentElement.style.setProperty('--cursor-speed', speed);
+    }
+    
+    // Применяем при загрузке страницы
+    applyEffects();
+
+    // Находим чекбоксы на странице ресурс-паков (если мы на ней)
+    const checkboxes = document.querySelectorAll('.effect-checkbox');
+    checkboxes.forEach(cb => {
+        const eff = cb.value;
+        cb.checked = activeEffects.includes(eff);
+
+        cb.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                if (!activeEffects.includes(eff)) activeEffects.push(eff);
+            } else {
+                activeEffects = activeEffects.filter(item => item !== eff);
+            }
+            localStorage.setItem('ultraEffects', JSON.stringify(activeEffects));
+            applyEffects();
+        });
+    });
+
+    // --- 1. КУРСОР ---
     if (!isMobile) {
         const cursorDot = document.createElement('div');
         const cursorOutline = document.createElement('div');
@@ -12,19 +47,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.appendChild(cursorDot);
         document.body.appendChild(cursorOutline);
 
+        // Используем CSS transition для плавности и контроля скорости
+        cursorOutline.style.transition = `left var(--cursor-speed, 300ms) ease-out, top var(--cursor-speed, 300ms) ease-out, width 0.2s, height 0.2s, background-color 0.2s`;
+
         window.addEventListener('mousemove', function(e) {
             cursorDot.style.left = `${e.clientX}px`;
             cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: "forwards" });
+            cursorOutline.style.left = `${e.clientX}px`;
+            cursorOutline.style.top = `${e.clientY}px`;
         });
 
-        const interactables = document.querySelectorAll('a, button, .card');
+        const interactables = document.querySelectorAll('a, button, .card, .effect-toggle');
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
         });
 
-        // Магнитные ссылки в хедере
         const navLinks = document.querySelectorAll('.site-header a');
         navLinks.forEach(link => {
             link.addEventListener('mousemove', (e) => {
@@ -55,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(typeWriter, 500);
     }
 
-    // --- 3. ФОН (Космическая сеть) ---
+    // --- 3. ФОН ---
     const canvas = document.getElementById("space-bg");
     if (canvas) {
         const ctx = canvas.getContext("2d");
@@ -133,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
         animate();
     }
 
-    // --- 4. 3D НАКЛОН КАРТОЧЕК (Только ПК) ---
+    // --- 4. 3D КАРТОЧКИ ---
     if (!isMobile) {
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
