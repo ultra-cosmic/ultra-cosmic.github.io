@@ -15,3 +15,6 @@ body {
 .versions {
      margin-left: 280px; /* Убрали пробел */
 }
+.header {
+     margin-left: 280px;
+}
