@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultra Cosmic - Главная</title>
-    <link rel="stylesheet" href="style.css"> <!-- ВОТ ГЛАВНАЯ ОШИБКА БЫЛА ЗДЕСЬ -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Фон с частицами -->
+    <canvas id="space-bg"></canvas>
 
     <header class="site-header">
         <nav>
             <a href="index.html" class="active">Главная</a>
             <a href="projects.html">Проекты</a>
-            <a href="#">Новости</a>
         </nav>
     </header>
 
     <main class="container">
-        <h1>Приветствую на сайте Ultra Cosmic</h1>
+        <h1>Добро пожаловать в <br><span id="typing-text" class="neon-title" data-text="ULTRA COSMIC"></span><span class="cursor"></span></h1>
         <h2>Здесь я буду выкладывать свои проекты по версиям. Добро пожаловать в мой цифровой уголок!</h2>
         
         <a href="projects.html" class="btn">Смотреть все проекты</a>
+
+        <!-- БЛОК НОВОСТЕЙ -->
+        <div class="news-block">
+            <h3>Последние новости</h3>
+            <p><strong>[21.10.2026]</strong> Сайт полностью переехал на неоновый дизайн! Добавлены анимации и космический фон.</p>
+            <p><strong>[20.10.2026]</strong> Вышла первая версия терминального калькулятора Calc Ultra. Подробности в разделе проектов.</p>
+        </div>
     </main>
 
+    <script src="script.js"></script>
 </body>
 </html>
