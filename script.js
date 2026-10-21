@@ -1,4 +1,35 @@
-// 1. Эффект печатной машинки для главного заголовка
+// --- 1. КАСТОМНЫЙ КУРСОР ---
+const cursorDot = document.createElement('div');
+const cursorOutline = document.createElement('div');
+cursorDot.classList.add('cursor-dot');
+cursorOutline.classList.add('cursor-outline');
+document.body.appendChild(cursorDot);
+document.body.appendChild(cursorOutline);
+
+window.addEventListener('mousemove', function(e) {
+    const posX = e.clientX;
+    const posY = e.clientY;
+    
+    // Точка двигается моментально
+    cursorDot.style.left = `${posX}px`;
+    cursorDot.style.top = `${posY}px`;
+    
+    // Обводка двигается с задержкой (анимация в CSS)
+    cursorOutline.animate({
+        left: `${posX}px`,
+        top: `${posY}px`
+    }, { duration: 500, fill: "forwards" });
+});
+
+// Увеличиваем курсор при наведении на кликабельные элементы
+const links = document.querySelectorAll('a, button, .card');
+links.forEach(link => {
+    link.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    link.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+
+// --- 2. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ (Главная) ---
 document.addEventListener("DOMContentLoaded", function() {
     const textElement = document.getElementById("typing-text");
     if (textElement) {
@@ -10,14 +41,15 @@ document.addEventListener("DOMContentLoaded", function() {
             if (i < text.length) {
                 textElement.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(typeWriter, 100); // Скорость печати
+                setTimeout(typeWriter, 100);
             }
         }
         setTimeout(typeWriter, 500);
     }
 });
 
-// 2. Космические частицы на фоне (Canvas)
+
+// --- 3. КОСМИЧЕСКАЯ СЕТЬ ЧАСТИЦ (Реагирует на мышь) ---
 const canvas = document.getElementById("space-bg");
 if (canvas) {
     const ctx = canvas.getContext("2d");
@@ -30,15 +62,21 @@ if (canvas) {
     window.addEventListener('resize', resize);
     resize();
 
+    let mouse = { x: null, y: null, radius: 150 };
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.x;
+        mouse.y = e.y;
+    });
+
     let particles = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 150; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 2,
-            speedX: (Math.random() - 0.5) * 1,
-            speedY: (Math.random() - 0.5) * 1,
-            color: Math.random() > 0.5 ? "#00f3ff" : "#ff00ff" // Голубой или розовый
+            radius: Math.random() * 2 + 1,
+            speedX: (Math.random() - 0.5) * 1.5,
+            speedY: (Math.random() - 0.5) * 1.5,
+            color: Math.random() > 0.5 ? "#00f3ff" : "#ff00ff"
         });
     }
 
@@ -46,23 +84,87 @@ if (canvas) {
         requestAnimationFrame(animate);
         ctx.clearRect(0, 0, width, height);
 
-        particles.forEach(p => {
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            
+            // Движение
             p.x += p.speedX;
             p.y += p.speedY;
 
-            // Возвращаем частицы на экран, если они улетели
-            if (p.x < 0) p.x = width;
-            if (p.x > width) p.x = 0;
-            if (p.y < 0) p.y = height;
-            if (p.y > height) p.y = 0;
+            // Отскок от краев
+            if (p.x < 0 || p.x > width) p.speedX *= -1;
+            if (p.y < 0 || p.y > height) p.speedY *= -1;
 
+            // Реакция на мышь (отталкивание)
+            if (mouse.x != null) {
+                let dx = mouse.x - p.x;
+                let dy = mouse.y - p.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    p.x -= dx / 10;
+                    p.y -= dy / 10;
+                }
+            }
+
+            // Рисуем частицу
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fillStyle = p.color;
             ctx.shadowBlur = 10;
             ctx.shadowColor = p.color;
             ctx.fill();
-        });
+
+            // Рисуем линии между частицами
+            for (let j = i + 1; j < particles.length; j++) {
+                let p2 = particles[j];
+                let dx2 = p.x - p2.x;
+                let dy2 = p.y - p2.y;
+                let dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0, 243, 255, ${1 - dist/100})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+        }
     }
     animate();
 }
+
+
+// --- 4. 3D ЭФФЕКТ ДЛЯ КАРТОЧЕК (Parallax Tilt) ---
+const cards = document.querySelectorAll('.card');
+
+cards.forEach(card => {
+    card.addEventListener('mousemove', handleMove);
+    card.addEventListener('mouseleave', handleLeave);
+});
+
+function handleMove(e) {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -10; // Наклон по X
+    const rotateY = ((x - centerX) / centerX) * 10;  // Наклон по Y
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+}
+
+function handleLeave(e) {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+}
+
+// Убираем стандартный курсор у ссылок
+document.querySelectorAll('a').forEach(a => {
+    a.style.cursor = 'none';
+});
