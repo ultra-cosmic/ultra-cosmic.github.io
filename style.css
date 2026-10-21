@@ -1,4 +1,16 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Высота страницы = 100% высоты экрана */
+    margin: 0; /* Убираем стандартные отступы браузера */
+}
+
+/* Твой класс */
 .calc_ultra {
-    margin-top: 100 px;
-    background: rgb(0, 140, 255); 
+    margin-top: auto; /* ВОЛШЕБСТВО: это свойство прижимает блок к низу */
+    background: rgb(0, 140, 255);
+    
+    /* Добавим красоты, чтобы текст не прилипал к краям */
+    padding: 20px; 
+    text-align: center; 
 }
