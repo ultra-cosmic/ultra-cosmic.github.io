@@ -1,46 +1,45 @@
-// --- 1. КАСТОМНЫЙ КУРСОР + ШЛЕЙФ ---
-const cursorDot = document.createElement('div');
-const cursorOutline = document.createElement('div');
-cursorDot.classList.add('cursor-dot');
-cursorOutline.classList.add('cursor-outline');
-document.body.appendChild(cursorDot);
-document.body.appendChild(cursorOutline);
+// Проверяем, мобильное ли это устройство
+const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
-window.addEventListener('mousemove', function(e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    
-    cursorDot.style.left = `${posX}px`;
-    cursorDot.style.top = `${posY}px`;
-    
-    cursorOutline.animate({
-        left: `${posX}px`,
-        top: `${posY}px`
-    }, { duration: 300, fill: "forwards" });
-});
+// --- 1. КАСТОМНЫЙ КУРСОР (Только для ПК) ---
+if (!isMobile) {
+    const cursorDot = document.createElement('div');
+    const cursorOutline = document.createElement('div');
+    cursorDot.classList.add('cursor-dot');
+    cursorOutline.classList.add('cursor-outline');
+    document.body.appendChild(cursorDot);
+    document.body.appendChild(cursorOutline);
 
-// Ховер-эффект курсора
-const interactables = document.querySelectorAll('a, button, .card');
-interactables.forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-});
+    window.addEventListener('mousemove', function(e) {
+        cursorDot.style.left = `${e.clientX}px`;
+        cursorDot.style.top = `${e.clientY}px`;
+        cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 300, fill: "forwards" });
+    });
+
+    const interactables = document.querySelectorAll('a, button, .card');
+    interactables.forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+}
 
 // --- 2. МАГНИТНЫЕ ССЫЛКИ В ХЕДЕРЕ ---
 const navLinks = document.querySelectorAll('.site-header a');
-navLinks.forEach(link => {
-    link.addEventListener('mousemove', (e) => {
-        const rect = link.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        link.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+if (!isMobile) {
+    navLinks.forEach(link => {
+        link.addEventListener('mousemove', (e) => {
+            const rect = link.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            link.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        });
+        link.addEventListener('mouseleave', () => {
+            link.style.transform = `translate(0px, 0px)`;
+        });
     });
-    link.addEventListener('mouseleave', () => {
-        link.style.transform = `translate(0px, 0px)`;
-    });
-});
+}
 
-// --- 3. ПЕЧАТНАЯ МАШИНКА ---
+// --- 3. ВОЗВРАЩАЕМ ПЕЧАТНУЮ МАШИНКУ + ГЛИТЧ ---
 document.addEventListener("DOMContentLoaded", function() {
     const textElement = document.getElementById("typing-text");
     if (textElement) {
@@ -51,14 +50,17 @@ document.addEventListener("DOMContentLoaded", function() {
             if (i < text.length) {
                 textElement.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(typeWriter, 80);
+                setTimeout(typeWriter, 100);
+            } else {
+                // Когда текст напечатался, включаем глитч-эффект
+                textElement.parentElement.classList.add("glitch-active");
             }
         }
         setTimeout(typeWriter, 500);
     }
 });
 
-// --- 4. КОСМИЧЕСКАЯ СЕТЬ (ФОН) ---
+// --- 4. КОСМИЧЕСКАЯ СЕТЬ (Оптимизировано для телефонов) ---
 const canvas = document.getElementById("space-bg");
 if (canvas) {
     const ctx = canvas.getContext("2d");
@@ -71,13 +73,18 @@ if (canvas) {
     resize();
 
     let mouse = { x: null, y: null, radius: 200 };
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
-    });
+    if (!isMobile) {
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+    }
 
     let particles = [];
-    for (let i = 0; i < 120; i++) {
+    // На телефоне меньше частиц, чтобы не лагало
+    const particleCount = isMobile ? 40 : 100;
+    
+    for (let i = 0; i < particleCount; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
@@ -98,7 +105,7 @@ if (canvas) {
             if (p.x < 0 || p.x > width) p.speedX *= -1;
             if (p.y < 0 || p.y > height) p.speedY *= -1;
 
-            if (mouse.x != null) {
+            if (!isMobile && mouse.x != null) {
                 let dx = mouse.x - p.x;
                 let dy = mouse.y - p.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
@@ -134,39 +141,27 @@ if (canvas) {
     animate();
 }
 
-// --- 5. 3D КАРТОЧКИ С БЛИКОМ (GLARE) ---
-const cards = document.querySelectorAll('.card');
-cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+// --- 5. 3D КАРТОЧКИ С БЛИКОМ (Только для ПК) ---
+if (!isMobile) {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
         
-        // 3D Наклон
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -15;
-        const rotateY = ((x - centerX) / centerX) * 15;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-        
-        // Блик
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+        });
     });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
-    });
-});
-
-// --- 6. ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ (Intersection Observer) ---
-const revealElements = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-        }
-    });
-}, { threshold: 0.1 });
-
-revealElements.forEach(el => observer.observe(el));
+}
